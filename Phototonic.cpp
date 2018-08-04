@@ -495,6 +495,11 @@ void Phototonic::createActions() {
     connect(createDirectoryAction, SIGNAL(triggered()), this, SLOT(createSubDirectory()));
     createDirectoryAction->setIcon(QIcon::fromTheme("folder-new", QIcon(":/images/new_folder.png")));
 
+    setSaveDirectoryAction = new QAction(tr("Set Save Directory"), this);
+    setSaveDirectoryAction->setObjectName("setSaveDir");
+    connect(setSaveDirectoryAction, SIGNAL(triggered()), this, SLOT(setSaveDirectory()));
+    setSaveDirectoryAction->setIcon(QIcon::fromTheme("folder-visiting", QIcon(":/images/folder-visiting.png")));
+
     goBackAction = new QAction(tr("Back"), this);
     goBackAction->setObjectName("goBack");
     goBackAction->setIcon(QIcon::fromTheme("go-previous", QIcon(":/images/back.png")));
@@ -703,6 +708,7 @@ void Phototonic::createMenus() {
     fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(includeSubDirectoriesAction);
     fileMenu->addAction(createDirectoryAction);
+    fileMenu->addAction(setSaveDirectoryAction);
     fileMenu->addAction(showClipboardAction);
     fileMenu->addAction(addBookmarkAction);
     fileMenu->addSeparator();
@@ -3289,6 +3295,11 @@ void Phototonic::createSubDirectory() {
 
     setStatus(tr("Created %1").arg(newDirName));
     fileSystemTree->expand(selectedDirs[0]);
+}
+
+void Phototonic::setSaveDirectory() {
+    Settings::saveDirectory = QFileDialog::getExistingDirectory(this, tr("Directory to save images into:"),
+            QString(), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 }
 
 QString Phototonic::getSelectedPath() {
