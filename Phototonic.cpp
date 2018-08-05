@@ -25,6 +25,7 @@
 #include "ColorsDialog.h"
 #include "ExternalAppsDialog.h"
 #include "ProgressDialog.h"
+#include "RangeInputDialog.h"
 #include "ImagePreview.h"
 #include "FileListWidget.h"
 #include "GuideWidget.h"
@@ -412,6 +413,10 @@ void Phototonic::createActions() {
     selectAllAction->setObjectName("selectAll");
     connect(selectAllAction, SIGNAL(triggered()), this, SLOT(selectAllThumbs()));
 
+    selectByBrightnesAction = new QAction(tr("Select by Brightness"), this);
+    selectByBrightnesAction->setObjectName("selectByBrightness");
+    connect(selectByBrightnesAction, SIGNAL(triggered()), this, SLOT(selectByBrightness()));
+
     aboutAction = new QAction(tr("About"), this);
     aboutAction->setObjectName("about");
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(about()));
@@ -726,6 +731,7 @@ void Phototonic::createMenus() {
     editMenu->addAction(deletePermanentlyAction);
     editMenu->addSeparator();
     editMenu->addAction(selectAllAction);
+    editMenu->addAction(selectByBrightnesAction);
     editMenu->addAction(invertSelectionAction);
     addAction(filterImagesFocusAction);
     addAction(setPathFocusAction);
@@ -781,6 +787,7 @@ void Phototonic::createMenus() {
     thumbsViewer->addAction(deletePermanentlyAction);
     addMenuSeparator(thumbsViewer);
     thumbsViewer->addAction(selectAllAction);
+    thumbsViewer->addAction(selectByBrightnesAction);
     thumbsViewer->addAction(invertSelectionAction);
     thumbsViewer->setContextMenuPolicy(Qt::ActionsContextMenu);
     menuBar()->setVisible(true);
@@ -1235,6 +1242,15 @@ void Phototonic::toggleFullScreen() {
 
 void Phototonic::selectAllThumbs() {
     thumbsViewer->selectAll();
+}
+
+void Phototonic::selectByBrightness() {
+    RangeInputDialog dlg(this);
+    if (dlg.exec()) {
+        qreal min = dlg.minimumValue();
+        qreal max = dlg.maximumValue();
+        thumbsViewer->selectByBrightness(min, max);
+    }
 }
 
 void Phototonic::copyOrCutThumbs(bool isCopyOperation) {
