@@ -16,10 +16,15 @@
  *  along with Phototonic.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <sys/xattr.h>
+
 #include "Tags.h"
 #include "Settings.h"
 #include "ProgressDialog.h"
 #include "MessageBox.h"
+
+const QByteArray ImageTags::xattrTagsKey("user.xdg.tags");
+const int ImageTags::xattrTagsMaxLen(4096); // limit for many filesystems: total xattrs must fit in 1 block
 
 ImageTags::ImageTags(QWidget *parent, ThumbsViewer *thumbsViewer, MetadataCache *metadataCache) : QWidget(parent) {
     tagsTree = new QTreeWidget;
@@ -134,10 +139,19 @@ void ImageTags::addTag(QString tagName, bool tagChecked) {
     tagsTree->addTopLevelItem(tagItem);
 }
 
-bool ImageTags::writeTagsToImage(QString &imageFileName, QSet<QString> &newTags) {
-    QSet<QString> imageTags;
-    Exiv2::Image::AutoPtr exifImage;
+bool ImageTags::writeTagsToImage(QString &imageFileName, QSet<QString> &newTags) {    
+    if (newTags.isEmpty()) {
+        removexattr(imageFileName.toLocal8Bit().data(), xattrTagsKey.constData());
+    } else {
+        QByteArray commaSep = newTags.values().join(QLatin1Char(',')).toLocal8Bit();
+        setxattr(imageFileName.toLocal8Bit().data(), xattrTagsKey.constData(),
+                 commaSep.constData(), commaSep.size(), 0);
+    }
 
+    if (!Settings::writeExifKeywords)
+        return true;
+
+    Exiv2::Image::AutoPtr exifImage;
     try {
         exifImage = Exiv2::ImageFactory::open(imageFileName.toStdString());
         exifImage->readMetadata();

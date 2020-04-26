@@ -82,6 +82,7 @@ namespace Settings {
     extern const char optionCopyMoveToPaths[];
     extern const char optionKnownTags[];
     extern const char optionSetWindowIcon[];
+    extern const char optionWriteExifKeywords[];
 
     extern QSettings *appSettings;
     extern unsigned int layoutMode;
@@ -161,6 +162,7 @@ namespace Settings {
     extern QStringList filesList;
     extern bool isFileListLoaded;
     extern bool setWindowIcon;
+    extern bool writeExifKeywords;
 }
 
 #endif // SETTINGS_H

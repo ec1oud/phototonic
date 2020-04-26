@@ -1991,6 +1991,7 @@ void Phototonic::writeSettings() {
     Settings::appSettings->setValue(Settings::optionHideDockTitlebars, (bool) Settings::hideDockTitlebars);
     Settings::appSettings->setValue(Settings::optionShowViewerToolbar, (bool) Settings::showViewerToolbar);
     Settings::appSettings->setValue(Settings::optionSetWindowIcon, (bool) Settings::setWindowIcon);
+    Settings::appSettings->setValue(Settings::optionWriteExifKeywords, (bool) Settings::writeExifKeywords);
 
     /* Action shortcuts */
     Settings::appSettings->beginGroup(Settings::optionShortcuts);
@@ -2118,6 +2119,7 @@ void Phototonic::readSettings() {
     Settings::hideDockTitlebars = Settings::appSettings->value(Settings::optionHideDockTitlebars).toBool();
     Settings::showViewerToolbar = Settings::appSettings->value(Settings::optionShowViewerToolbar).toBool();
     Settings::setWindowIcon = Settings::appSettings->value(Settings::optionSetWindowIcon).toBool();
+    Settings::writeExifKeywords = Settings::appSettings->value(Settings::optionWriteExifKeywords).toBool();
 
     /* read external apps */
     Settings::appSettings->beginGroup(Settings::optionExternalApps);

@@ -17,8 +17,10 @@
  */
 
 #include <exiv2/exiv2.hpp>
+#include <sys/xattr.h>
 #include "Settings.h"
 #include "MetadataCache.h"
+#include "Tags.h"
 
 void MetadataCache::updateImageTags(QString &imageFileName, QSet<QString> tags) {
     cache[imageFileName].tags = tags;
@@ -84,6 +86,7 @@ bool MetadataCache::loadImageMetadata(const QString &imageFullPath) {
         qWarning() << "Failed to read Exif metadata";
     }
 
+    // read keywords from exif
     try {
         Exiv2::IptcData &iptcData = exifImage->iptcData();
         if (!iptcData.empty()) {
@@ -99,6 +102,16 @@ bool MetadataCache::loadImageMetadata(const QString &imageFullPath) {
         }
     } catch (Exiv2::Error &error) {
         qWarning() << "Failed to read Iptc metadata";
+    }
+
+    // read tags from filesystem xattrs
+    QByteArray xattrTags(ImageTags::xattrTagsMaxLen, 0);
+    ssize_t xattrSz = getxattr(imageFullPath.toLocal8Bit().constData(),
+                               ImageTags::xattrTagsKey.constData(), xattrTags.data(), xattrTags.size());
+    xattrTags.truncate(xattrSz);
+    if (!xattrTags.isEmpty()) {
+        for (auto tag : xattrTags.split(','))
+            tags.insert(QString::fromLocal8Bit(tag));
     }
 
     ImageMetadata imageMetadata;

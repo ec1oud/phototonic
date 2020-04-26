@@ -66,6 +66,9 @@ public:
     QAction *removeTagAction;
     TagsDisplayMode currentDisplayMode;
 
+    static const QByteArray xattrTagsKey;
+    static const int xattrTagsMaxLen;
+
 private:
     bool writeTagsToImage(QString &imageFileName, QSet<QString> &tags);
 

@@ -73,6 +73,7 @@ private:
     QLineEdit *startupDirLineEdit;
     QLineEdit *thumbsBackgroundImageLineEdit;
     QCheckBox *setWindowIconCheckBox;
+    QCheckBox *writeExifKeywordsCheckBox;
 
     void setButtonBgColor(QColor &color, QToolButton *button);
 };

@@ -250,6 +250,11 @@ SettingsDialog::SettingsDialog(QWidget *parent) : QDialog(parent) {
     setWindowIconCheckBox = new QCheckBox(tr("Set the application icon according to the current image"), this);
     setWindowIconCheckBox->setChecked(Settings::setWindowIcon);
 
+    // Allow writing EXIF keywords, or only tagging via xattrs
+    writeExifKeywordsCheckBox = new QCheckBox(tr("Write tags as EXIF keywords"), this);
+    writeExifKeywordsCheckBox->setToolTip(tr("Tags are written to extended attributes.  Writing them to EXIF additionally will modify the file."));
+    writeExifKeywordsCheckBox->setChecked(Settings::writeExifKeywords);
+
     QVBoxLayout *generalSettingsLayout = new QVBoxLayout;
     generalSettingsLayout->addWidget(reverseMouseCheckBox);
     generalSettingsLayout->addWidget(deleteConfirmCheckBox);
@@ -279,6 +284,7 @@ SettingsDialog::SettingsDialog(QWidget *parent) : QDialog(parent) {
     slideshowGroupBox->setLayout(slideshowLayout);
     generalSettingsLayout->addWidget(slideshowGroupBox);
     generalSettingsLayout->addWidget(setWindowIconCheckBox);
+    generalSettingsLayout->addWidget(writeExifKeywordsCheckBox);
     generalSettingsLayout->addStretch(1);
 
     /* Confirmation buttons */
@@ -353,6 +359,7 @@ void SettingsDialog::saveSettings() {
     Settings::reverseMouseBehavior = reverseMouseCheckBox->isChecked();
     Settings::deleteConfirm = deleteConfirmCheckBox->isChecked();
     Settings::setWindowIcon = setWindowIconCheckBox->isChecked();
+    Settings::writeExifKeywords = writeExifKeywordsCheckBox->isChecked();
 
     if (startupDirectoryRadioButtons[Settings::RememberLastDir]->isChecked()) {
         Settings::startupDir = Settings::RememberLastDir;

@@ -65,6 +65,7 @@ namespace Settings {
     const char optionCopyMoveToPaths[] = "CopyMoveToPaths";
     const char optionKnownTags[] = "KnownTags";
     const char optionSetWindowIcon[] = "setWindowIcon";
+    const char optionWriteExifKeywords[] = "writeExifKeywords";
 
     QSettings *appSettings;
     unsigned int layoutMode;
@@ -144,5 +145,6 @@ namespace Settings {
     QStringList filesList;
     bool isFileListLoaded;
     bool setWindowIcon;
+    bool writeExifKeywords;
 }
 
